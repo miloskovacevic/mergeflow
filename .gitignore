@@ -1,0 +1,27 @@
+# Binaries
+/bin/
+/dist/
+*.exe
+*.out
+
+# Go build cache
+*.test
+*.prof
+
+# Go modules (never ignore these)
+/go.sum
+
+# IntelliJ / JetBrains
+.idea/
+*.iml
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor backups
+*~
+
+# Logs
+*.log
