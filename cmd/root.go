@@ -5,10 +5,14 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/miloskovacevic/mergeflow/internal/app"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"os"
+	"strings"
 )
+
+var appInstance *app.App
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -20,15 +24,14 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Run: func(cmd *cobra.Command, args []string) {
+
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	fmt.Println("yo")
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
@@ -37,4 +40,43 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	cobra.OnInitialize(initConfig)
+}
+
+func initConfig() {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	viper.SetEnvPrefix("MERGEFLOW")
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	viper.SetConfigName("config") // config.yaml
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(home + "/.config/mergeflow")
+
+	if err = viper.ReadInConfig(); err != nil {
+		fmt.Println("No config file found, using env/flags only")
+	}
+
+	appInstance, err = app.NewApp()
+	if err != nil {
+		panic(err)
+	}
+}
+
+type Config struct {
+	Jira struct {
+		Project string
+		Route   string
+		Token   string
+	}
+	Gitlab struct {
+		Route string
+		Repos []int
+		Token string
+	}
 }
