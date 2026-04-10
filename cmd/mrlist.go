@@ -53,15 +53,19 @@ func ListMergeRequestsHandler(ctx context.Context, provider domain.GitProvider) 
 		}
 
 		var openMrCount int = 0
-		fmt.Println(accent("📦 Project Id:"), projectId)
+		name := companies[projectId]
+		if name == "" {
+			name = "unknown"
+		}
+
+		fmt.Println(accent("📦 Project:"), name)
+		fmt.Println(accent("🆔 Project Id:"), projectId)
 		fmt.Println(title("🚀 Merge Requests"))
+
 		for _, mr := range collections {
 			if mr.Author != blockedUser {
-
 				ageDays := int(time.Since(mr.CreatedAt).Hours() / 24)
-
 				totalOpenMRs++
-				openMrCount++
 
 				if ageDays > 2 {
 					olderThan2Days++

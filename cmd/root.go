@@ -14,6 +14,18 @@ import (
 
 var appInstance *app.App
 
+var companies = map[int]string{
+	970:  "data-manager-go",
+	700:  "insurance-api",
+	827:  "investment-api",
+	912:  "oracle-bridge-go",
+	585:  "process-manager",
+	696:  "result-job",
+	1152: "storage-api",
+	649:  "notifications",
+	581:  "data-manager",
+}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "mergeflow",
